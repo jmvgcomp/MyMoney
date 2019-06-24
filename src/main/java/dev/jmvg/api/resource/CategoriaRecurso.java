@@ -35,15 +35,11 @@ public class CategoriaRecurso {
         response.setHeader("Location", uri.toASCIIString());
 
         return ResponseEntity.created(uri).body(categoriaSalva);
-
     }
 
     @GetMapping("/{codigo}")
     public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo){
         Categoria categoria = categoriaRepositorio.findOne(codigo);
-        if (categoria != null) {
-            return ResponseEntity.ok(categoria);
-        }
-        return ResponseEntity.notFound().build();
+        return (categoria != null) ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
     }
 }

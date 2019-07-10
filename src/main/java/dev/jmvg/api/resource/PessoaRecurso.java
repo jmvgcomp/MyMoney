@@ -4,6 +4,7 @@ package dev.jmvg.api.resource;
 import dev.jmvg.api.event.EventoRecursoCriado;
 import dev.jmvg.api.model.Pessoa;
 import dev.jmvg.api.repository.PessoaRepositorio;
+import dev.jmvg.api.service.ServicoPessoa;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,10 @@ import java.util.List;
 @RequestMapping("/pessoas")
 public class PessoaRecurso {
     private final PessoaRepositorio pessoaRepositorio;
-
-    public PessoaRecurso(PessoaRepositorio pessoaRepositorio, ApplicationEventPublisher publisher) {
+    private ServicoPessoa servicoPessoa;
+    public PessoaRecurso(PessoaRepositorio pessoaRepositorio, ServicoPessoa servicoPessoa, ApplicationEventPublisher publisher) {
         this.pessoaRepositorio = pessoaRepositorio;
+        this.servicoPessoa = servicoPessoa;
         this.publisher = publisher;
     }
 
@@ -41,5 +43,23 @@ public class PessoaRecurso {
     public ResponseEntity<Pessoa> buscaPeloCodigo(@PathVariable Long codigo){
         Pessoa pessoa = pessoaRepositorio.findOne(codigo);
         return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long codigo){
+        pessoaRepositorio.delete(codigo);
+    }
+
+    @PutMapping("/{codigo}")
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa){
+        Pessoa pessoaSalva = servicoPessoa.pessoaAtualizar(codigo, pessoa);
+        return ResponseEntity.ok(pessoaSalva);
+    }
+
+    @PutMapping("/{codigo}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+        servicoPessoa.atualizarPropriedadeAtivo(codigo, ativo);
     }
 }

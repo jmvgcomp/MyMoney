@@ -1,11 +1,8 @@
 package dev.jmvg.api.model;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import net.minidev.json.annotate.JsonIgnore;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -21,6 +18,12 @@ public class Pessoa {
 
     @Embedded
     private Endereco endereco;
+
+    @JsonIgnore
+    @Transient
+    public boolean isInativo(){
+        return !this.ativo;
+    }
 
     public long getCodigo() {
         return codigo;

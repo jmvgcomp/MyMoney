@@ -80,7 +80,7 @@ public class MyMoneyExceptionHandler extends ResponseEntityExceptionHandler {
         private String mensagemUsuario;
         private String mensagemDesenvolvedor;
 
-        Erro(String mensagemUsuario, String mensagemDesenvolvedor) {
+        public Erro(String mensagemUsuario, String mensagemDesenvolvedor) {
             this.mensagemUsuario = mensagemUsuario;
             this.mensagemDesenvolvedor = mensagemDesenvolvedor;
         }

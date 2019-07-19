@@ -4,6 +4,7 @@ import dev.jmvg.api.event.EventoRecursoCriado;
 import dev.jmvg.api.exceptionhandler.MyMoneyExceptionHandler;
 import dev.jmvg.api.model.Lancamento;
 import dev.jmvg.api.repository.LancamentoRepositorio;
+import dev.jmvg.api.repository.filtro.LancamentoFiltro;
 import dev.jmvg.api.service.ServicoLancamento;
 import dev.jmvg.api.service.exception.PessoaInexistenteOuInativaException;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,7 +35,9 @@ public class LancamentoRecurso {
     }
 
     @GetMapping
-    public List<Lancamento> listar(){return lancamentoRepositorio.findAll(); }
+    public List<Lancamento> pesquisar(LancamentoFiltro lancamentoFiltro){
+        return lancamentoRepositorio.filtrar(lancamentoFiltro);
+    }
 
     @GetMapping("/{codigo}")
     public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo){

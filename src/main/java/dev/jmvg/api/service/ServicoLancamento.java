@@ -2,7 +2,7 @@ package dev.jmvg.api.service;
 
 import dev.jmvg.api.model.Lancamento;
 import dev.jmvg.api.model.Pessoa;
-import dev.jmvg.api.repository.LancamentoRepositorio;
+import dev.jmvg.api.repository.LancamentoRepository;
 import dev.jmvg.api.repository.PessoaRepositorio;
 import dev.jmvg.api.service.exception.PessoaInexistenteOuInativaException;
 import org.springframework.stereotype.Service;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServicoLancamento {
     private final PessoaRepositorio pessoaRepositorio;
-    private LancamentoRepositorio lancamentoRepositorio;
-    public ServicoLancamento(PessoaRepositorio pessoaRepositorio, LancamentoRepositorio lancamentoRepositorio) {
+    private LancamentoRepository lancamentoRepository;
+    public ServicoLancamento(PessoaRepositorio pessoaRepositorio, LancamentoRepository lancamentoRepository) {
         this.pessoaRepositorio = pessoaRepositorio;
-        this.lancamentoRepositorio = lancamentoRepositorio;
+        this.lancamentoRepository = lancamentoRepository;
     }
 
     public Lancamento salvar(Lancamento lancamento) {
@@ -21,6 +21,6 @@ public class ServicoLancamento {
         if (pessoa == null || pessoa.isInativo()) {
             throw new PessoaInexistenteOuInativaException();
         }
-        return lancamentoRepositorio.save(lancamento);
+        return lancamentoRepository.save(lancamento);
     }
 }

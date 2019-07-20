@@ -1,6 +1,7 @@
 package dev.jmvg.api.repository.lancamento;
 
 import dev.jmvg.api.model.Lancamento;
+import dev.jmvg.api.model.Lancamento_;
 import dev.jmvg.api.repository.filtro.LancamentoFiltro;
 import org.springframework.util.StringUtils;
 
@@ -36,9 +37,20 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
         List<Predicate> predicates = new ArrayList<>();
         if(!StringUtils.isEmpty(lancamentoFiltro.getDescricao())){
             predicates.add(builder.like(
-                    builder.lower(root.get("descricao")), "%" + lancamentoFiltro.getDescricao().toLowerCase() +"%")
+                    builder.lower(root.get(Lancamento_.descricao)), "%" + lancamentoFiltro.getDescricao().toLowerCase() +"%")
             );
         }
+        if (lancamentoFiltro.getDataVencimentoDe() != null) {
+            predicates.add(
+              builder.greaterThanOrEqualTo(root.get(Lancamento_.dataVencimento), lancamentoFiltro.getDataVencimentoDe())
+            );
+        }
+        if(lancamentoFiltro.getDataVencimentoAte()!=null){
+            predicates.add(
+              builder.lessThanOrEqualTo(root.get(Lancamento_.dataVencimento), lancamentoFiltro.getDataVencimentoAte())
+            );
+        }
+
 
         return predicates.toArray(new Predicate[predicates.size()]);
     }

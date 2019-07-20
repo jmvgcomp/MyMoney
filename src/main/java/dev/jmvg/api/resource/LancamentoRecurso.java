@@ -3,7 +3,7 @@ package dev.jmvg.api.resource;
 import dev.jmvg.api.event.EventoRecursoCriado;
 import dev.jmvg.api.exceptionhandler.MyMoneyExceptionHandler;
 import dev.jmvg.api.model.Lancamento;
-import dev.jmvg.api.repository.LancamentoRepositorio;
+import dev.jmvg.api.repository.LancamentoRepository;
 import dev.jmvg.api.repository.filtro.LancamentoFiltro;
 import dev.jmvg.api.service.ServicoLancamento;
 import dev.jmvg.api.service.exception.PessoaInexistenteOuInativaException;
@@ -18,30 +18,29 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/lancamentos")
 public class LancamentoRecurso {
     private final ServicoLancamento servicoLancamento;
-    private final LancamentoRepositorio lancamentoRepositorio;
+    private final LancamentoRepository lancamentoRepository;
     private final MessageSource messageSource;
     private final ApplicationEventPublisher publisher;
-    public LancamentoRecurso(ServicoLancamento servicoLancamento, LancamentoRepositorio lancamentoRepositorio, MessageSource messageSource, ApplicationEventPublisher publisher) {
+    public LancamentoRecurso(ServicoLancamento servicoLancamento, LancamentoRepository lancamentoRepository, MessageSource messageSource, ApplicationEventPublisher publisher) {
         this.servicoLancamento = servicoLancamento;
-        this.lancamentoRepositorio = lancamentoRepositorio;
+        this.lancamentoRepository = lancamentoRepository;
         this.messageSource = messageSource;
         this.publisher = publisher;
     }
 
     @GetMapping
     public List<Lancamento> pesquisar(LancamentoFiltro lancamentoFiltro){
-        return lancamentoRepositorio.filtrar(lancamentoFiltro);
+        return lancamentoRepository.filtrar(lancamentoFiltro);
     }
 
     @GetMapping("/{codigo}")
     public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo){
-        Lancamento lancamento = lancamentoRepositorio.findOne(codigo);
+        Lancamento lancamento = lancamentoRepository.findOne(codigo);
         return lancamento != null ? ResponseEntity.ok(lancamento) : ResponseEntity.notFound().build();
     }
 

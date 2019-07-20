@@ -10,6 +10,8 @@ import dev.jmvg.api.service.exception.PessoaInexistenteOuInativaException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +36,8 @@ public class LancamentoRecurso {
     }
 
     @GetMapping
-    public List<Lancamento> pesquisar(LancamentoFiltro lancamentoFiltro){
-        return lancamentoRepository.filtrar(lancamentoFiltro);
+    public Page<Lancamento> pesquisar(LancamentoFiltro lancamentoFiltro, Pageable pageable){
+        return lancamentoRepository.filtrar(lancamentoFiltro, pageable);
     }
 
     @GetMapping("/{codigo}")
@@ -49,6 +51,12 @@ public class LancamentoRecurso {
         Lancamento lancamentoSalvo = servicoLancamento.salvar(lancamento);
         publisher.publishEvent(new EventoRecursoCriado(this, response, lancamentoSalvo.getCodigo()));
         return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
+    }
+
+    @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long codigo){
+        lancamentoRepository.delete(codigo);
     }
 
     @ExceptionHandler({PessoaInexistenteOuInativaException.class})
